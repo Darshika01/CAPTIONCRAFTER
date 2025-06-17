@@ -3,15 +3,13 @@
 A web-based application built with Flask that analyzes uploaded images using AI models. This app allows users to upload images and receive intelligent predictions, making it ideal for tasks like classification, object detection, or content analysis.
 
 📂 Project Structure
-php
-Copy
-Edit
 ai-image-analyzer/
-├── app.py                # Main Flask application
-├── requirements.txt      # Python dependencies
-├── static/               # Static files (CSS, JS, images)
-├── templates/            # HTML templates (Jinja2)
-├── uploads/              # Folder to store uploaded images
+    ├── app.py                # Main Flask application
+    ├── requirements.txt      # Python dependencies
+    ├── static/               # Static files (CSS, JS, images)
+    ├── templates/            # HTML templates (Jinja2)
+    ├── uploads/              # Folder to store uploaded images
+
 🚀 Features
 Upload images through a simple UI
 
