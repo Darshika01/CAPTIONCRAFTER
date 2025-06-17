@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Image Analysis Results</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background-size: cover;
+      color: #f1f1f1;
+      padding-top: 80px;
+      padding-bottom: 40px;
+    }
+
+    .navbar {
+      background-color: #1e1e2f;
+      padding: 12px 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: #00e5ff !important;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      padding: 35px;
+      max-width: 1000px;
+      margin: auto;
+      color: #f1f1f1;
+    }
+
+    h2, h5 {
+      font-weight: 700;
+      color: #00e5ff;
+    }
+
+    .btn {
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success {
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      border: none;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .btn-secondary {
+      background: #555;
+      border: none;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .nav-tabs .nav-link {
+      font-weight: 600;
+      color: #ccc;
+      border: none;
+    }
+
+    .nav-tabs .nav-link.active {
+      border-bottom: 3px solid #00e5ff;
+      color: #fff;
+    }
+
+    .tab-pane {
+      margin-top: 25px;
+    }
+
+    .caption-box {
+      background: #2a2a3d;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 5px solid #00e5ff;
+    }
+
+    .list-group-item {
+      background: #2e2e2e;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #f1f1f1;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
+    .color-box {
+      width: 40px;
+      height: 40px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 2px solid #fff;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .color-box:hover {
+      transform: scale(1.1);
+    }
+
+    .feature-map {
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      width: 100%;
+      height: auto;
+      border: 2px solid #555;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar fixed-top navbar-expand-lg">
+  <a class="navbar-brand" href="#"><i class="fas fa-robot"></i> AI Image Analyzer</a>
+  <div class="ms-auto">
+    <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+  </div>
+</nav>
+
+<!-- Main Card -->
+<div class="card">
+  <div class="text-center mb-4">
+    <h2><i class="fas fa-image"></i> Analysis Results</h2>
+    <p class="text-muted">Explore details extracted from your image</p>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs justify-content-center mb-3" id="resultTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="caption-tab" data-bs-toggle="tab" data-bs-target="#caption" type="button" role="tab">Caption</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="features-tab" data-bs-toggle="tab" data-bs-target="#features" type="button" role="tab">Image Features</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="colors-tab" data-bs-toggle="tab" data-bs-target="#colors" type="button" role="tab">Dominant Colors</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="maps-tab" data-bs-toggle="tab" data-bs-target="#maps" type="button" role="tab">Feature Maps</button>
+    </li>
+  </ul>
+
+  <!-- Image Preview -->
+  <div class="text-center mb-4">
+    <img src="{{ file_path }}" alt="Uploaded Image" class="img-fluid rounded shadow-sm" style="max-height: 350px;">
+  </div>
+
+  <!-- Tab Contents -->
+  <div class="tab-content" id="resultTabsContent">
+
+    <!-- Caption Tab -->
+    <div class="tab-pane fade show active" id="caption" role="tabpanel">
+      <div class="caption-box mt-3">
+        <h5><i class="fas fa-quote-left"></i> Caption</h5>
+        <p>{{ results.caption }}</p>
+      </div>
+    </div>
+
+    <!-- Features Tab -->
+    <div class="tab-pane fade" id="features" role="tabpanel">
+      <h5 class="mt-4"><i class="fas fa-info-circle"></i> Image Details</h5>
+      <ul class="list-group mt-3">
+        <li class="list-group-item"><strong>Filename:</strong> {{ results.filename }}</li>
+        <li class="list-group-item"><strong>Dimensions:</strong> {{ results.dimensions }}</li>
+        <li class="list-group-item"><strong>Color Type:</strong> {{ results.color_type }}</li>
+        <li class="list-group-item"><strong>Channels:</strong> {{ results.channels }}</li>
+        <li class="list-group-item"><strong>File Size:</strong> {{ results.file_size }}</li>
+        <li class="list-group-item"><strong>Brightness:</strong> {{ results.brightness }}</li>
+        <li class="list-group-item"><strong>Contrast:</strong> {{ results.contrast }}</li>
+        <li class="list-group-item"><strong>Sharpness:</strong> {{ results.sharpness }}</li>
+        <li class="list-group-item"><strong>AI Detection:</strong> {{ results.ai_detection }}</li>
+      </ul>
+    </div>
+
+    <!-- Colors Tab -->
+    <div class="tab-pane fade" id="colors" role="tabpanel">
+      <h5 class="mt-4"><i class="fas fa-palette"></i> Dominant Colors</h5>
+      <div class="d-flex flex-wrap mt-3">
+        {% for color in results.dominant_colors %}
+          <div class="color-box" style="background-color: rgb({{ color[0] }}, {{ color[1] }}, {{ color[2] }});"></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Feature Maps Tab -->
+    <div class="tab-pane fade" id="maps" role="tabpanel">
+      <h5 class="mt-4"><i class="fas fa-layer-group"></i> Feature Maps</h5>
+      <div class="row g-3 mt-3">
+        {% for fmap in results.feature_maps %}
+          <div class="col-md-3 col-6">
+            <img src="{{ fmap }}" class="feature-map img-fluid" alt="Feature Map">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Buttons -->
+  <div class="text-center mt-5">
+    <a href="/" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    <a href="{{ url_for('download_report') }}" class="btn btn-success"><i class="fas fa-download"></i> Download Report</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
